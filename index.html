@@ -207,7 +207,6 @@
   .memory-card.flipped { background: linear-gradient(145deg, #ffffff, #ffe9a7); color: #1a237e; }
   .memory-card.matched { background: linear-gradient(145deg, #b9ffb9, #7be87b); color: #0a330a; opacity: 0.7; }
 
-  /* 🃏 FLASHCARD — FIXED */
   .flashcard { max-width: 500px; margin: 20px auto; aspect-ratio: 1.5; perspective: 1200px; }
   .flashcard-inner {
     position: relative; width: 100%; height: 100%;
@@ -325,7 +324,6 @@
   }
   .game-frame { width: 100%; height: 100%; border: none; display: block; }
 
-  /* 🎨 DRAW */
   #page-draw { padding: 20px 16px 90px; }
   .draw-layout { display: flex; flex-direction: column; gap: 10px; max-width: 1000px; margin: 0 auto; width: 100%; }
   .draw-toolbar {
@@ -1108,14 +1106,11 @@ function applyLang(lang) {
     var key = el.getAttribute('data-i18n');
     if (t[key]) el.textContent = t[key];
   });
-  // Also translate placeholders
   var nameInput = document.getElementById('certNameInput');
   if (nameInput) nameInput.placeholder = lang === 'ar' ? 'اكتب اسمك...' : 'Enter your name...';
-  // Update clock date language
   updateClock();
 }
 
-/* ============ LIVE CLOCK ============ */
 function updateClock() {
   var now = new Date();
   var h = now.getHours().toString().padStart(2, '0');
@@ -1139,7 +1134,6 @@ function updateClock() {
 setInterval(updateClock, 1000);
 updateClock();
 
-/* ============ MARQUEE ============ */
 function buildMarquee() {
   var track = document.getElementById('marqueeTrack');
   if (!track) return;
@@ -1163,7 +1157,6 @@ function buildMarquee() {
 }
 buildMarquee();
 
-/* ============ NAVIGATION ============ */
 function showPage(pageId) {
   document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
   var page = document.getElementById('page-' + pageId);
@@ -1173,7 +1166,6 @@ function showPage(pageId) {
   });
   var nl = document.getElementById('navLinks');
   if (nl) nl.classList.remove('open');
-  // Body class for draw landscape fix
   document.body.classList.toggle('draw-page', pageId === 'draw');
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
@@ -1204,12 +1196,10 @@ document.getElementById('menuToggle').addEventListener('click', function() {
   document.getElementById('navLinks').classList.toggle('open');
 });
 
-/* ============ LANGUAGE TOGGLE ============ */
 document.getElementById('langToggle').addEventListener('click', function() {
   applyLang(currentLang === 'en' ? 'ar' : 'en');
 });
 
-/* ============ 🔤 FONT PICKER ============ */
 var FONTS = [
   { id: 'nunito', name: 'Nunito', desc: 'Clean & friendly (default)', family: "'Nunito', 'Segoe UI', sans-serif" },
   { id: 'lexend', name: 'Lexend', desc: 'Designed for reading ease', family: "'Lexend', 'Segoe UI', sans-serif" },
@@ -1262,7 +1252,6 @@ document.querySelectorAll('.size-btn').forEach(function(btn) {
   });
 });
 
-// Load saved font + size
 (function() {
   try {
     var f = localStorage.getItem('mathKingdomFont');
@@ -1286,7 +1275,6 @@ document.querySelectorAll('.size-btn').forEach(function(btn) {
   } catch(e) {}
 })();
 
-/* ============ HELP MODAL ============ */
 document.getElementById('helpFab').addEventListener('click', function() {
   document.getElementById('helpModal').classList.add('active');
 });
@@ -1297,7 +1285,6 @@ document.getElementById('helpModal').addEventListener('click', function(e) {
   if (e.target === document.getElementById('helpModal')) document.getElementById('helpModal').classList.remove('active');
 });
 
-/* ============ CONFETTI ============ */
 function fireConfetti() {
   var colors = ['#ff6b6b','#feca57','#48dbfb','#ff9ff3','#1dd1a1','#a29bfe','#ffd966'];
   for (var i = 0; i < 30; i++) {
@@ -1315,7 +1302,6 @@ function fireConfetti() {
   }
 }
 
-/* ============ LEARN ============ */
 function initTableGrid() {
   var grid = document.getElementById('tableGrid');
   if (!grid || grid.children.length > 0) return;
@@ -1339,7 +1325,6 @@ function showTable(n) {
   d.innerHTML = h;
 }
 
-/* ============ ACTIVITY 1 ============ */
 function newCountChallenge() {
   var count = Math.floor(Math.random() * 19) + 2;
   var sd = document.getElementById('countStars');
@@ -1364,7 +1349,6 @@ function newCountChallenge() {
 }
 document.getElementById('newCountBtn').addEventListener('click', newCountChallenge);
 
-/* ============ ACTIVITY 2 ============ */
 function initExploreGrid() {
   var g = document.getElementById('exploreGrid');
   if (!g || g.children.length > 0) return;
@@ -1387,7 +1371,6 @@ function showExplore(n) {
   d.innerHTML = h;
 }
 
-/* ============ ACTIVITY 3 ============ */
 var memState = { flipped: [], matched: [], lock: false };
 function initMemoryGame() {
   memState = { flipped: [], matched: [], lock: false };
@@ -1424,7 +1407,6 @@ function onMemClick(el) {
 }
 document.getElementById('newMemoryBtn').addEventListener('click', initMemoryGame);
 
-/* ============ ACTIVITY 4 ============ */
 var qScore = 0, qStreak = 0, qAnswer = 0;
 function newQuickQuestion() {
   var a = Math.floor(Math.random() * 19) + 2;
@@ -1446,13 +1428,12 @@ function newQuickQuestion() {
 }
 function updQS() { document.getElementById('quickScore').innerHTML = 'Score: ' + qScore + ' &nbsp; 🔥 Streak: ' + qStreak; }
 
-/* ============ 🎨 FIXED DRAWING CANVAS with working eraser ============ */
 var canvas, ctx, drawing = false, currentColor = '#ff6b6b', history = [], brushSize = 5, eraserMode = false;
 
 function initCanvas() {
   canvas = document.getElementById('drawCanvas');
   if (!canvas) return;
-  if (ctx) return; // already initialized
+  if (ctx) return;
   ctx = canvas.getContext('2d');
   var dpr = window.devicePixelRatio || 1;
   var rect = canvas.getBoundingClientRect();
@@ -1508,12 +1489,10 @@ function startDraw(e) {
   drawing = true;
   try { canvas.setPointerCapture(e.pointerId); } catch(err) {}
   var p = getPos(e);
-  // Save history (before drawing)
   try {
     history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
     if (history.length > 20) history.shift();
   } catch(err) {}
-  // 🔑 Set the correct stroke style at START (this fixes eraser!)
   var dpr = window.devicePixelRatio || 1;
   if (eraserMode) {
     ctx.strokeStyle = '#ffffff';
@@ -1540,10 +1519,8 @@ function endDraw(e) {
   if (!drawing) return;
   drawing = false;
   try { canvas.releasePointerCapture(e.pointerId); } catch(err) {}
-  // 🔑 Restore normal drawing style AFTER stroke (so next normal draw works)
   var dpr = window.devicePixelRatio || 1;
   if (eraserMode) {
-    // keep eraser style for next stroke
     ctx.strokeStyle = '#ffffff';
     ctx.lineWidth = brushSize * 4 * dpr;
   } else {
@@ -1599,7 +1576,6 @@ document.getElementById('brushSizeBtn').addEventListener('click', function() {
   }
 });
 
-/* ============ 🃏 FIXED FLASHCARDS ============ */
 var flashIndex = 0;
 var flashCards = [];
 (function() {
@@ -1621,7 +1597,6 @@ function toggleFlip() {
   document.getElementById('flashcard').classList.toggle('flipped');
 }
 
-// 🔑 FIXED: only attach the flip handler ONCE to the inner element
 document.getElementById('flashcardInner').addEventListener('click', function(e) {
   e.stopPropagation();
   toggleFlip();
@@ -1646,7 +1621,6 @@ document.getElementById('flashPrev').addEventListener('click', function(e) {
 
 updateFlash();
 
-/* ============ CALM ============ */
 document.querySelectorAll('.mood-btn').forEach(function(btn) {
   btn.addEventListener('click', function() {
     document.querySelectorAll('.mood-btn').forEach(function(b) { b.classList.remove('selected'); });
@@ -1675,7 +1649,6 @@ document.getElementById('breathStopBtn').addEventListener('click', function() {
   document.getElementById('breathStopBtn').style.display = 'none';
 });
 
-/* ============ REWARDS ============ */
 var badges = [
   { id:'first', icon:'🌟', name:'First Star' }, { id:'streak3', icon:'🔥', name:'3 in a Row' },
   { id:'streak10', icon:'⚡', name:'10 in a Row' }, { id:'table5', icon:'5️⃣', name:'Table 5' },
@@ -1703,14 +1676,12 @@ function renderRewards() {
 document.getElementById('addPointsBtn').addEventListener('click', function() { points += 10; document.getElementById('pointsDisplay').textContent = points; fireConfetti(); });
 document.getElementById('resetPointsBtn').addEventListener('click', function() { points = 0; unlockedBadges = {}; document.getElementById('pointsDisplay').textContent = 0; renderRewards(); });
 
-/* ============ CERTIFICATE ============ */
 document.getElementById('certNameInput').addEventListener('input', function() {
   document.getElementById('certNameDisplay').textContent = this.value || (currentLang === 'ar' ? 'اسمك' : 'Your Name');
 });
 document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' });
 document.getElementById('printCert').addEventListener('click', function() { window.print(); });
 
-/* ============ PROGRESS ============ */
 function renderProgress() {
   var tbody = document.getElementById('progressBody');
   if (!tbody) return;
@@ -1750,7 +1721,6 @@ function renderProgress() {
     '<div style="color:#d0d0f0;">' + labels.points + ' 💎</div></div>';
 }
 
-/* ============ PWA INSTALL ============ */
 var deferredPrompt = null;
 window.addEventListener('beforeinstallprompt', function(e) {
   e.preventDefault();
@@ -1764,7 +1734,6 @@ document.getElementById('installBtn').addEventListener('click', function() {
   }
 });
 
-/* ============ INIT ============ */
 document.addEventListener('keydown', function(e) {
   if (e.key === 'Escape') {
     document.getElementById('helpModal').classList.remove('active');
@@ -1773,14 +1742,13 @@ document.addEventListener('keydown', function(e) {
 });
 applyLang('en');
 </script>
-<!-- ========== EXTRA SUBJECTS AUTO-LOADER ========== -->
+
+<!-- ========== EXTRA SUBJECTS AUTO-LOADER (v3 - FIXED) ========== -->
 <script>
 (function() {
   /* ============================================================
      📚 EASY CONFIG — Add new subjects here!
-     Each line = one new menu button + one new page.
-     Just create the HTML file in your repo (e.g. shapes.html)
-     and add its details below.
+     Just create the HTML file (e.g. shapes.html) and add an entry.
      ============================================================ */
   var EXTRA_SUBJECTS = [
     {
@@ -1790,81 +1758,75 @@ applyLang('en');
       titleAr: 'الأشكال',
       file: 'shapes.html'
     }
-    // 👇 Uncomment these when you create the files:
-    // ,{
-    //   id: 'space',
-    //   emoji: '🚀',
-    //   titleEn: 'Space',
-    //   titleAr: 'الفضاء',
-    //   file: 'space.html'
-    // }
+    // ,{ id: 'space', emoji: '🚀', titleEn: 'Space', titleAr: 'الفضاء', file: 'space.html' }
   ];
 
-  // Detect current language (matches the main site's localStorage)
   function currentLang() {
     try { return localStorage.getItem('mathKingdomLang') || 'en'; }
     catch(e) { return 'en'; }
   }
 
-  // ============================================================
-  // Build the menu buttons + page containers automatically
-  // ============================================================
   function injectSubjects() {
+    // Find menu
     var navLinks = document.getElementById('navLinks');
     if (!navLinks) return false;
 
-    // Find where the pages live (main container)
-    var pagesContainer = document.querySelector('.game-container') || document.body;
+    // 🔑 Insert new pages BEFORE the footer (so they sit in the correct flow)
+    var footer = document.querySelector('.footer');
+    var insertPoint = footer && footer.parentNode ? footer : null;
 
-    // Reference: the "Parents" button, so we insert before it
+    // Reference for button insertion
     var parentBtn = navLinks.querySelector('[data-page="parents"]');
 
     EXTRA_SUBJECTS.forEach(function(subj) {
-      // Skip if already added
       if (document.getElementById(subj.id + 'NavBtn')) return;
 
       var lang = currentLang();
-      var label = (lang === 'ar' ? subj.titleAr : subj.titleEn);
+      var shortLabel = (lang === 'ar' ? subj.titleAr : subj.titleEn);
 
-      // 1) Nav button
+      // ---- 1) NAV BUTTON ----
       var btn = document.createElement('button');
       btn.className = 'nav-btn';
       btn.id = subj.id + 'NavBtn';
       btn.dataset.page = subj.id;
-      btn.dataset.i18n = 'nav_' + subj.id;
-      btn.textContent = subj.emoji + ' ' + label;
+      btn.textContent = subj.emoji + ' ' + shortLabel;
       if (parentBtn) navLinks.insertBefore(btn, parentBtn);
       else navLinks.appendChild(btn);
 
-      // 2) Page container with iframe
+      // ---- 2) PAGE DIV (inserted before footer) ----
       var page = document.createElement('div');
       page.className = 'page';
       page.id = 'page-' + subj.id;
       page.innerHTML =
         '<div class="page-header">' +
-          '<h1>' + subj.emoji + ' ' + label + '</h1>' +
+          '<h1>' + subj.emoji + ' ' + shortLabel + '</h1>' +
+          '<p style="color:#d0d0f0;">' +
+            (lang === 'ar' ? 'تعلم واستمتع!' : 'Learn and have fun!') +
+          '</p>' +
         '</div>' +
         '<div style="position:relative; width:100%; height:85vh; min-height:600px; border-radius:24px; overflow:hidden; border:3px solid #ffd966; background:#0d47a1;">' +
-          '<iframe id="' + subj.id + 'Frame" style="width:100%; height:100%; border:none; display:block;" title="' + label + '"></iframe>' +
+          '<iframe id="' + subj.id + 'Frame" style="width:100%; height:100%; border:none; display:block;" title="' + shortLabel + '"></iframe>' +
         '</div>';
-      pagesContainer.appendChild(page);
 
-      // 3) Click handler — load the iframe lazily and switch pages
+      if (insertPoint) {
+        footer.parentNode.insertBefore(page, footer);
+      } else {
+        document.body.appendChild(page);
+      }
+
+      // ---- 3) CLICK HANDLER ----
       btn.addEventListener('click', function() {
         openSubject(subj);
       });
     });
 
-    // Patch the main site's showPage so any programmatic call works too
+    // Patch window.showPage so any programmatic call works
     if (typeof window.showPage === 'function' && !window.__extraSubjectsPatched) {
-      var original = window.showPage;
+      var originalShowPage = window.showPage;
       window.showPage = function(pageId) {
-        var subj = EXTRA_SUBJECTS.find(function(s) { return s.id === pageId; });
-        if (subj) {
-          openSubject(subj);
-          return;
-        }
-        return original.apply(this, arguments);
+        var subj = EXTRA_SUBJECTS.filter(function(s) { return s.id === pageId; })[0];
+        if (subj) { openSubject(subj); return; }
+        return originalShowPage.apply(this, arguments);
       };
       window.__extraSubjectsPatched = true;
     }
@@ -1872,14 +1834,15 @@ applyLang('en');
     return true;
   }
 
-  // Open a subject page
   function openSubject(subj) {
-    // Switch pages
+    // Hide all existing pages
     document.querySelectorAll('.page').forEach(function(p) { p.classList.remove('active'); });
+
+    // Show target page
     var page = document.getElementById('page-' + subj.id);
     if (page) page.classList.add('active');
 
-    // Highlight nav
+    // Update nav highlight
     document.querySelectorAll('.nav-btn').forEach(function(b) {
       b.classList.toggle('active', b.dataset.page === subj.id);
     });
@@ -1887,6 +1850,9 @@ applyLang('en');
     // Close mobile menu
     var nl = document.getElementById('navLinks');
     if (nl) nl.classList.remove('open');
+
+    // Remove draw-page body class if it was set
+    document.body.classList.remove('draw-page');
 
     // Lazy-load the iframe
     var frame = document.getElementById(subj.id + 'Frame');
@@ -1898,26 +1864,24 @@ applyLang('en');
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
 
-  // Retry injection a few times (in case menu isn't built yet)
+  // Retry injection until menu + footer exist
   var attempts = 0;
   var iv = setInterval(function() {
     if (injectSubjects() || ++attempts > 40) clearInterval(iv);
   }, 100);
   window.addEventListener('load', injectSubjects);
 
-  // Re-render labels when language is toggled
+  // Refresh labels when language is toggled
   document.addEventListener('click', function(e) {
-    if (e.target && (e.target.id === 'langToggle' || e.target.closest && e.target.closest('#langToggle'))) {
+    var tgt = e.target;
+    if (tgt && (tgt.id === 'langToggle' || (tgt.closest && tgt.closest('#langToggle')))) {
       setTimeout(function() {
         var lang = currentLang();
         EXTRA_SUBJECTS.forEach(function(subj) {
           var btn = document.getElementById(subj.id + 'NavBtn');
-          if (btn) {
-            var label = (lang === 'ar' ? subj.titleAr : subj.titleEn);
-            btn.textContent = subj.emoji + ' ' + label;
-          }
+          if (btn) btn.textContent = subj.emoji + ' ' + (lang === 'ar' ? subj.titleAr : subj.titleEn);
         });
-      }, 200);
+      }, 250);
     }
   });
 })();
